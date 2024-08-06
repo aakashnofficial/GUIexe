@@ -1,0 +1,51 @@
+name: Build Executables
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m venv venv
+        .\venv\Scripts\activate
+        pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Build PyQt executable with PyInstaller
+      run: |
+        .\venv\Scripts\activate
+        pyinstaller --onefile --name PyQtApp --hidden-import=PyQt5 GUIV01.py
+
+    - name: Build Flask executable with PyInstaller
+      run: |
+        .\venv\Scripts\activate
+        pyinstaller --onefile --name FlaskApp --hidden-import=flask FlaskAppV01.py
+
+    - name: Archive the PyQt executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: PyQtApp
+        path: dist/AntennaGUI.exe
+
+    - name: Archive the Flask executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: FlaskApp
+        path: dist/FlaskServer.exe
