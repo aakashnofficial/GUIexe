@@ -31,25 +31,30 @@ jobs:
     - name: Build PyQt executable with PyInstaller
       run: |
         .\venv\Scripts\activate
-        pyinstaller --onefile --name AntennaGUI --hidden-import=PyQt5 GUIV01.py
+        pyinstaller --onefile --name PyQtApp pyqt_app/main.py
 
     - name: Build Flask executable with PyInstaller
       run: |
         .\venv\Scripts\activate
-        pyinstaller --onefile --name FlaskServer --hidden-import=flask FlaskAppV01.py
-        
+        pyinstaller --onefile --name FlaskApp flask_app/app.py
+
     - name: List dist directory contents
       run: |
         dir dist
 
+    - name: Compress executables
+      run: |
+        tar -czf PyQtApp.tar.gz -C dist PyQtApp.exe
+        tar -czf FlaskApp.tar.gz -C dist FlaskApp.exe
+
     - name: Archive the PyQt executable
       uses: actions/upload-artifact@v3
       with:
-        name: AntennaGUI
-        path: dist/AntennaGUI.exe
+        name: PyQtApp
+        path: PyQtApp.tar.gz
 
     - name: Archive the Flask executable
       uses: actions/upload-artifact@v3
       with:
-        name: FlaskServer
-        path: dist/FlaskServer.exe
+        name: FlaskApp
+        path: FlaskApp.tar.gz
