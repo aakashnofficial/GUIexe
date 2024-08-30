@@ -31,12 +31,12 @@ jobs:
     - name: Build PyQt executable with PyInstaller
       run: |
         .\venv\Scripts\activate
-        pyinstaller --onefile --name PyQtApp pyqt_app/main.py
+        pyinstaller --onefile --name GUI GUIV01.py
 
     - name: Build Flask executable with PyInstaller
       run: |
         .\venv\Scripts\activate
-        pyinstaller --onefile --name FlaskApp flask_app/app.py
+        pyinstaller --onefile --name FlaskApp FlaskAppV01.py
 
     - name: List dist directory contents
       run: |
@@ -44,14 +44,14 @@ jobs:
 
     - name: Compress executables
       run: |
-        tar -czf PyQtApp.tar.gz -C dist PyQtApp.exe
+        tar -czf GUI.tar.gz -C dist GUI.exe
         tar -czf FlaskApp.tar.gz -C dist FlaskApp.exe
 
     - name: Archive the PyQt executable
       uses: actions/upload-artifact@v3
       with:
-        name: PyQtApp
-        path: PyQtApp.tar.gz
+        name: GUI
+        path: GUI.tar.gz
 
     - name: Archive the Flask executable
       uses: actions/upload-artifact@v3
